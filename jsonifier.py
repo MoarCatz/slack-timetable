@@ -1,5 +1,3 @@
-import json
-
 class TableJSONifier:
     @classmethod
     def make_field(self, cls, changes):
@@ -17,12 +15,11 @@ class TableJSONifier:
                 "text": text,
                 "fields": fld_list}
 
-        return json.dumps({"attachments": [atch]},
-                          indent = 4,
-                          ensure_ascii = False)
+        return [atch]
 
 
 if __name__ == "__main__":
     tj = TableJSONifier()
     print(tj.make_attachment('понедельник', [('10Е', 'nothing'),
                                              ('11E', 'nothing')]))
+
