@@ -99,7 +99,7 @@ class TimeTableBot:
         # Send a message to #general channel
         self.log.info('sending a message to Slack')
         slack.chat.post_message('#general',
-                                text = 'Timetable Updates',
+                                text = ' ',
                                 username = 'timetable',
                                 icon_emoji = ':spiral_calendar_pad:',
                                 attachments = attachments)
