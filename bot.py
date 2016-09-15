@@ -39,12 +39,11 @@ class TimeTableBot:
 
     def already_sent(self):
         """Checks if the changes were sent already"""
-        with open('changes.txt') as f:
-            tm = int(f.read())
-            self.changes_sent = datetime.fromtimestamp(tm)
-            if self.changes_sent > self.curr_date:
-                return True
-            return False
+        tm = int(os.environ['CHANGES_TM'])
+        self.changes_sent = datetime.fromtimestamp(tm)
+        if self.changes_sent > self.curr_date:
+            return True
+        return False
 
     def get_table_page(self, addr, enc):
         """Gets the changes page's content"""
@@ -66,30 +65,22 @@ class TimeTableBot:
         """Returns a list of changes for both classes
         (if they're present)"""
         changes_list = []
-        changes10_match = re.search('<h2>10Е</h2>\s+?<p>([^<]+)', page)
-        changes11_match = re.search('<h2>11Е</h2>\s+?<p>([^<]+)', page)
-
-        if changes10_match:
-            changes_list.append(('10Е', changes10_match.group(1).replace('&nbsp;&mdash;', ' -')))
-            self.log.info('update for 10 found')
-            self.log.debug('update:\n' + changes10_match.group(1))
-        else:
-            self.log.info('no updates for 10')
-
-        if changes11_match:
-            changes_list.append(('11E', changes11_match.group(1).replace('&nbsp;&mdash;', ' -')))
-            self.log.info('update for 11 found')
-            self.log.debug('update:\n' + changes11_match.group(1))
-        else:
-            self.log.info('no updates for 11')
+        changes = re.findall(r'<h2>(1[10]Е)<\/h2>\n<p>((\n|.)+?)(?=(<\/body>|<h2>))', page)
+        for i in changes:
+            cls, chg = i[:2]
+            chg = chg.replace('<p>', '')
+            chg = chg.replace('</p>', '')
+            chg = chg.replace('&nbsp;&mdash;', ' –')
+            changes_list.append((cls, chg))
+            self.log.info('found updates for ' + i[0])
 
         return changes_list
 
     def set_timestamp(self, change_date):
         """Sets the new timestamp"""
-        with open('changes.txt', 'w') as f:
-            self.log.info('setting a new timestamp in changes.txt')
-            f.write(str(int(change_date.timestamp())))
+        tm = str(int(change_date.timestamp()))
+        self.log.info('setting a new timestamp in CHANGES_TM')
+        os.environ['CHANGES_TM'] = tm
 
     def send(self, attachments):
         """Sends a message to Slack"""
@@ -141,5 +132,4 @@ class TimeTableBot:
         self.set_timestamp(self.change_date)
         self.log.info('success, quitting')
 
-bot = TimeTableBot()
-bot.run()
+TimeTableBot().run()
