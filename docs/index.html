@@ -32,6 +32,21 @@
     </script>
 
     <script>
+      function isSubscribed() {
+        OneSignal.push(function() {
+          OneSignal.isPushNotificationsEnabled(function (isEnabled) {
+            if (isEnabled){
+              return true;
+            }
+            else{
+              return false;
+            }
+          })
+        });
+      }
+    </script>
+
+    <script>
       function subscribe() {
         OneSignal.push(function() {
           OneSignal.sendTags({
@@ -43,6 +58,35 @@
         OneSignal.push(function() {
           OneSignal.registerForPushNotifications();
         });
+      }
+    </script>
+
+    <script>
+      function unsubscribe() {
+        OneSignal.push(function() {
+          OneSignal.deleteTags(["class", "letter"]);
+        });
+
+        OneSignal.push(["setSubscription", false]);
+      }
+    </script>
+
+    <script>
+      function run() {
+        if (isSubscribed()) {
+          unsubscribe();
+
+          document.getElementById("setup_head").innerHTML = "Подключение";
+          document.getElementById("setup_hint").innerHTML = "";
+          document.getElementById("enable").attribute = "Подписаться";
+        }
+        else {
+          subscribe();
+
+          document.getElementById("setup_head").innerHTML = "Настройка";
+          document.getElementById("setup_hint").innerHTML = "Нажав кнопку ниже, ты можешь отписаться от уведомлений. Чтобы изменить класс, нужно отписать и заново оформить подписку.";
+          document.getElementById("enable").attribute = "Отписаться";
+        }
       }
     </script>
 </head>
@@ -110,21 +154,17 @@
 
             <input class="button-primary"
             type="submit" value="включить"
-            id="enable" onclick="subscribe(); return false;"/>
+            id="enable" onclick="run(); return false;"/>
 
           </fieldset>
         </form>
 
         <script>
-          OneSignal.push(function() {
-            OneSignal.isPushNotificationsEnabled(function (isEnabled) {
-              if (isEnabled){
-                document.getElementById("setup_head").innerHTML = "Настройка";
-                document.getElementById("setup_hint").innerHTML = "Чтобы изменить отслеживаемый класс, заполни форму и нажми \"Сохранить\""
-                document.getElementById("enable").attribute = "Сохранить";
-              }
-            })
-          });
+          if (isSubscribed()) {
+            document.getElementById("setup_head").innerHTML = "Настройка";
+            document.getElementById("setup_hint").innerHTML = "Нажав кнопку ниже, ты можешь отписаться от уведомлений. Чтобы изменить класс, нужно отписать и заново оформить подписку."
+            document.getElementById("enable").attribute = "Отписаться";
+          };
         </script>
 
 </body>
