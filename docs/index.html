@@ -30,6 +30,21 @@
         }
       }]);
     </script>
+
+    <script>
+      function subscribe() {
+        OneSignal.push(function() {
+          OneSignal.sendTags({
+            class: document.getElementById("class").value,
+            letter: document.getElementById("letter").value,
+          });
+        });
+
+        OneSignal.push(function() {
+          OneSignal.registerForPushNotifications();
+        });
+      }
+    </script>
 </head>
 
 <body>
@@ -93,37 +108,24 @@
               <option value="М">М</option>
             </select>
 
-            <script>
-              OneSignal.push(function() {
-                OneSignal.isPushNotificationsEnabled(function (isEnabled) {
-                  if (isEnabled){
-                    document.getElementById("setup_head").innerHTML = "Настройка";
-                    document.getElementById("setup_hint").innerHTML = "Чтобы изменить отслеживаемый класс, заполни форму и нажми \"Сохранить\""
-                    document.getElementById("enable").attribute = "Сохранить";
-
-                    document.write("
-                      <input class=\"button-primary\"
-                      type=\"submit\" value=\"сохранить\"
-                      id=\"save\" />
-
-                      <input class=\"button-primary\"
-                      type=\"submit\" value=\"выключить\"
-                      id=\"enable\" />
-                    ");
-                  }
-                  else {
-                    document.write("
-                      <input class=\"button-primary\"
-                      type=\"submit\" value=\"включить\"
-                      id=\"enable\" />
-                    ");
-                  }
-                })
-              });
-            </script>
+            <input class="button-primary"
+            type="submit" value="включить"
+            id="enable" onclick="subscribe(); return false;"/>
 
           </fieldset>
         </form>
+
+        <script>
+          OneSignal.push(function() {
+            OneSignal.isPushNotificationsEnabled(function (isEnabled) {
+              if (isEnabled){
+                document.getElementById("setup_head").innerHTML = "Настройка";
+                document.getElementById("setup_hint").innerHTML = "Чтобы изменить отслеживаемый класс, заполни форму и нажми \"Сохранить\""
+                document.getElementById("enable").attribute = "Сохранить";
+              }
+            })
+          });
+        </script>
 
 </body>
 
