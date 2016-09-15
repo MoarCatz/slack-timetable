@@ -1,25 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html">
-<meta name="robots" content="noindex">
-<title>Изменения в расписании | СУНЦ УрФУ</title>
-<style>
-  body {margin: 15mm 15mm 15mm 20mm; font: serif}
-  h1   {margin: 0px  0px  18pt 0px;  font-size: 18pt}
-  h2   {margin: 12pt 0px  6pt  0px;  font-size: 16pt}
-  p    {margin: 3pt  0px  3pt  0px;  font-size: 14pt}
-</style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timetable</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,700,700i&subset=cyrillic" rel="stylesheet" />
+
+    <!-- CSS Reset -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" />
+
+    <!-- Milligram Framework -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css" />
+
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+
+    <script>
+      var OneSignal = window.OneSignal || [];
+      OneSignal.push(["init", {
+        appId: "857a17b6-40b4-4e9b-ac71-7d8f1264edce",
+        autoRegister: false,
+        notifyButton: {
+          enable: false
+        }
+      }]);
+    </script>
 </head>
 
 <body>
-<h1>ИЗМЕНЕНИЯ В РАСПИСАНИИ НА ЧЕТВЕРГ, 15 СЕНТЯБРЯ</h1>
-<h2>10Е</h2>
-<p>1 урок&nbsp;&mdash; математика в 307</p>
-<p>2 урок&nbsp;&mdash; русский в 127</p>
-<p>3-4 уроки&nbsp;&mdash; информатика в 210</p>
-<h2>11Е</h2>
-<p>1 урок&nbsp;&mdash; ОБЖ в 307</p>
-<p>2 урок&nbsp;&mdash; экономика в 127</p>
-<p>3-4 уроки&nbsp;&mdash; литература в 210</p>
-</body></html>
+    <div class="container" id="name">
+      <div class="column" style="margin: 40px;">
+        <h1 align="center">Timetable</h2>
+      </div>
+    </div>
+
+    <div class="container" id="story">
+      <div class="column">
+        <p>Мы написали этот небольшой скрипт, чтобы, возможно, облегчить кому-то жизнь.
+           С его помощью можно забыть о проверке расписания на сайте,
+           так как он это будет <b>делать за тебя</b> и <b>присылать уведомления</b> об
+           изменениях прямо на компьютер или телефон.
+        </p>
+
+        <p>Чтобы начать, достаточно выбрать свой класс в форме ниже и нажать кнопку.
+           Наш сайт запросит разрешение на отправку уведомлений в браузер, необходимо
+           разрешить ему это делать. После этого можно считать настройку оконченной
+           и спокойно закрыть страницу.
+        </p>
+
+        <p>Как только робот заметит изменения в расписании, он отправит сообщение об этом.
+           <i>Для получения уведомлений не нужно заходить на сайт, достаточно быть
+           подключенным к интернету</i>.
+        </p>
+
+        <p>Всё просто, не так ли? :)</p>
+      </div>
+    </div>
+
+    <div class="container" id="setup">
+      <div class="column" style="margin: 40px;">
+        <h3 align="center" id="setup_head">Подключение</h3>
+
+        <form>
+          <fieldset>
+            <p id="setup_hint"></p>
+
+            <label for="class">Выбери класс...</label>
+            <select id="class">
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+            </select>
+
+            <label for="letter">...и букву</label>
+            <select id="letter">
+              <option value="А">А</option>
+              <option value="Б">Б</option>
+              <option value="В">В</option>
+              <option value="Г">Г</option>
+              <option value="Д">Д</option>
+              <option value="Е">Е</option>
+              <option value="З">З</option>
+              <option value="К">К</option>
+              <option value="Л">Л</option>
+              <option value="С">С</option>
+              <option value="М">М</option>
+            </select>
+
+            <script>
+              OneSignal.push(function() {
+                OneSignal.isPushNotificationsEnabled(function (isEnabled) {
+                  if (isEnabled){
+                    document.getElementById("setup_head").innerHTML = "Настройка";
+                    document.getElementById("setup_hint").innerHTML = "Чтобы изменить отслеживаемый класс, заполни форму и нажми \"Сохранить\""
+                    document.getElementById("enable").attribute = "Сохранить";
+
+                    document.write("
+                      <input class=\"button-primary\"
+                      type=\"submit\" value=\"сохранить\"
+                      id=\"save\" />
+
+                      <input class=\"button-primary\"
+                      type=\"submit\" value=\"выключить\"
+                      id=\"enable\" />
+                    ");
+                  }
+                  else {
+                    document.write("
+                      <input class=\"button-primary\"
+                      type=\"submit\" value=\"включить\"
+                      id=\"enable\" />
+                    ");
+                  }
+                })
+              });
+            </script>
+
+          </fieldset>
+        </form>
+
+</body>
+
+</html>
