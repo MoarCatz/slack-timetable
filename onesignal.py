@@ -10,7 +10,9 @@ class OneSignal:
                         "included_segments": [cls],
                         "headings": {"en": "Timetable"},
                         "contents": {"en": "Появились изменения для " + cls +
-                                     " на " + wkday + ": " + change}}
+                                     " на " + wkday + ": " + change},
+                        "url": "http://lyceum.urfu.ru/study/izmenHtml.php"
+                        }
 
         self.req = requests.post("https://onesignal.com/api/v1/notifications",
                    headers = self.header,
