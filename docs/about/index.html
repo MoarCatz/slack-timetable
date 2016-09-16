@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon"
+    href="https://cdn0.iconfinder.com/data/icons/ikooni-outline-free-basic/128/free-20-16.png"
+    type="image/x-icon" />
+    <title>Timetable</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,700,700i&subset=cyrillic" rel="stylesheet" />
+
+    <!-- CSS Reset -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css" />
+
+    <!-- Milligram Framework -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.1.0/milligram.min.css" />
+
+    <!-- Emoji CSS -->
+    <link rel="stylesheet" href="https://afeld.github.io/emoji-css/emoji.css" />
+</head>
+
+<body>
+    <div class="container" id="name">
+      <div class="column" style="margin: 40px;">
+        <h1 align="center" id="description">О проекте</h2>
+
+        <p>Мы написали этот небольшой скрипт, чтобы, возможно, облегчить кому-то жизнь.
+           С его помощью можно забыть о проверке расписания на сайте,
+           так как он это будет <b>делать за тебя</b> и <b>присылать уведомления</b> об
+           изменениях прямо на компьютер или телефон.
+        </p>
+
+        <br /><hr /><br /><br />
+
+        <h3 align="center" id="faq">FAQ</h3>
+
+        <p>Здесь мы собрали ответы на самые важные вопросы, которые могли бы возникнуть.</p>
+
+        <blockquote>
+          <p><em>То есть, я могу забыть про проверку расписания?</p></em>
+        </blockquote>
+        <p><b>Да!</b> Это делается довольно просто: достаточно выбрать свой класс на
+           главной странице и согласиться на получение уведомлений от сайта.
+        </p>
+
+        <blockquote>
+          <p><em>Достаточно ли подключить компьютер, чтобы уведомления также
+                 поступали на мой телефон?
+          </em></p>
+        </blockquote>
+        <p><b>Нет</b>, к сожалению, этого недостаточно в связи с тем, что, несмотря
+           на одного владельца, устройства имеют уникальные идентификаторы. Пожалуй,
+           это единственная трудность, которая может возникнуть <i class="em em-wink"></i>.
+        </p>
+
+        <blockquote>
+          <p><em>Получу ли я уведомления после закрытия страницы?</em></p>
+        </blockquote>
+        <p><b>Да!</b>. Сообщение придёт даже в том случае, если компьютер или
+           телефон были отключены. Они отобразятся при первом соединении с
+           интернетом <i class="em em-sparkles"></i>.
+        </p>
+
+        <blockquote>
+          <p><em>Как я могу перестать получать сообщения?</p></em>
+        </blockquote>
+        <p>Для этого достаточно нажать на значок замочка <i class="em em-lock"></i>
+           в браузере возле адреса сайта и запретить там отправку уведомлений.
+        </p>
+
+        <blockquote>
+          <p><em>Возможно ли изменить выбранный класс?</p></em>
+        </blockquote>
+        <p><b>Да</b>, достаточно лишь заново заполнить форму и нажать кнопку
+           <i>Подписаться</i>.
+        </p>
+
+        <blockquote>
+          <p><em>Как это работает?</p></em>
+        </blockquote>
+        <p>Исходные коды проекта доступны в нашем репозитории на
+           <a href="https://github.com/MoarCatz/slack-timetable">GitHub</a>.
+           Если есть пожелания и идеи, будем рады <i class="em em---1"></i>!
+        </p>
+
+        <blockquote>
+          <p><em>Здесь нет моего вопроса!</p></em>
+        </blockquote>
+        <p>Мы будем рады услышать отзывы и помочь. Просто заполни форму ниже.</p>
+
+        <form action="https://formaholic.com/f/a41a4a375e9d20de" method="POST"
+        accept-charset="UTF-8" id="contact">
+          <label for="name">Имя</label>
+          <input type="text" name="name" placeholder="HappyCat" required="true">
+          <label for="email">Email</label>
+          <input type="email" name="email" placeholder="iamcat@meow.com" required="true">
+          <label for="message">Сообщение</label>
+          <textarea name="message" placeholder="Привет, MoarCatz …"></textarea>
+          <input type="text" name="_gotcha" style="display:none">
+          <input type="submit" value="Отправить">
+        </form>
+      </div>
+    </div>
+</body>
+
+</html>
