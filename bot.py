@@ -36,7 +36,7 @@ class TimeTableBot:
     log_handler.setFormatter(log_fmt)
 
     log.addHandler(log_handler)
-
+    
     def connect(self):
         """Connects to the database"""
         self.url = urlparse(os.environ["DATABASE_URL"])
@@ -46,14 +46,14 @@ class TimeTableBot:
                                    password=self.url.password,
                                    host=self.url.hostname,
                                    port=self.url.port)
-
+                                   
         self.c = self.db.cursor()
         self.log.info('connection established')
 
     def already_sent(self):
         """Checks if the changes were sent already"""
         self.c.execute('''SELECT tm FROM date''')
-        tm = self.c.fetchone()
+        tm = float(self.c.fetchone()[0])
         self.changes_sent = datetime.fromtimestamp(tm)
         if self.changes_sent > self.curr_date:
             return True
@@ -95,6 +95,7 @@ class TimeTableBot:
         tm = int(change_date.timestamp())
         self.log.info('setting a new timestamp in the database')
         self.c.execute('''UPDATE date SET tm = %s''', (tm,))
+        self.db.commit()
 
     def send_slack(self, attachments):
         """Sends a message to Slack"""
@@ -111,13 +112,14 @@ class TimeTableBot:
 
     def run(self):
         self.log.info('starting up')
-
+        
         self.connect()
-
+        
         if self.already_sent():
             self.log.info('already up-to-date, quitting')
             self.log.debug('latest update sent for ' +
                            self.changes_sent.strftime('%d-%m-%Y'))
+            return
 
         try:
             self.page = self.get_table_page(os.environ['TIMETABLE_URL'],
@@ -146,6 +148,9 @@ class TimeTableBot:
 
         self.send_slack(atch)
         self.set_timestamp(self.change_date)
+        
+        self.db.close()
         self.log.info('success, quitting')
 
 TimeTableBot().run()
+
