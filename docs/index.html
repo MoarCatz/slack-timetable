@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon"
+    href="https://cdn0.iconfinder.com/data/icons/ikooni-outline-free-basic/128/free-20-16.png"
+    type="image/x-icon" />
     <title>Timetable</title>
 
     <!-- Google Fonts -->
@@ -27,13 +30,19 @@
         autoRegister: false,
         notifyButton: {
           enable: false
+        },
+        welcomeNotification: {
+          title: 'Timetable',
+          message: 'Так будут выглядеть уведомления. Добро пожаловать!'
         }
       }]);
     </script>
 
     <script>
       function subscribe() {
-        OneSignal.deleteTags(["class", "letter"]);
+        OneSignal.push(function() {
+          OneSignal.registerForPushNotifications();
+        });
 
         OneSignal.push(function() {
           OneSignal.sendTags({
@@ -42,9 +51,8 @@
           });
         });
 
-        OneSignal.push(function() {
-          OneSignal.registerForPushNotifications();
-        });
+        document.getElementById("enable").style.background='#606c76';
+        document.getElementById("enable").value='Готово!'
       }
     </script>
 </head>
@@ -52,12 +60,16 @@
 <body>
     <div class="container" id="name">
       <div class="column" style="margin: 40px;">
-        <h1 align="center">Timetable</h2>
-      </div>
-    </div>
+        <h1 align="center">Timetable</h1>
 
-    <div class="container" id="setup">
-      <div class="column" style="margin: 40px;">
+        <p align="center">
+          Чтобы получать уведомления, достаточно выбрать
+          свой класс и нажать кнопку, разрешив отправку
+          уведомлений.
+        </p>
+
+        <br /><hr /><br />
+
         <h3 align="center" id="setup_head">Подключение</h3>
 
         <form>
@@ -90,6 +102,10 @@
             <input class="button-primary"
             type="submit" value="включить"
             id="enable" onclick="subscribe(); return false;"/>
+
+            <button class="button button-outline">
+               <a href="about">О проекте</a>
+            </button>
 
           </fieldset>
         </form>
