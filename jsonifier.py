@@ -7,7 +7,7 @@ class TableJSONifier:
 
     @classmethod
     def make_attachment(self, wkday, fields):
-        text = "На сайте появились изменения в расписании на {}!".format(wkday.lower())
+        text = "На сайте появились изменения в расписании на {}!".format(wkday)
         fld_list = [self.make_field(*fld) for fld in fields]
 
         atch = {"fallback": "На сайте появились изменения в расписании!",

@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from datetime import datetime
 from slacker import Slacker
 from jsonifier import TableJSONifier
+from onesignal import OneSignal
 import logging, psycopg2, os, re
 
 class TimeTableBot:
@@ -36,7 +37,7 @@ class TimeTableBot:
     log_handler.setFormatter(log_fmt)
 
     log.addHandler(log_handler)
-    
+
     def connect(self):
         """Connects to the database"""
         self.url = urlparse(os.environ["DATABASE_URL"])
@@ -46,7 +47,7 @@ class TimeTableBot:
                                    password=self.url.password,
                                    host=self.url.hostname,
                                    port=self.url.port)
-                                   
+
         self.c = self.db.cursor()
         self.log.info('connection established')
 
@@ -71,6 +72,7 @@ class TimeTableBot:
         header = re.search('ИЗМЕНЕНИЯ В РАСПИСАНИИ НА ([А-Я]+), ([0-9]+) ([А-Я]+)', page)
         try:
             self.wkday, self.day, self.month = header.group(1, 2, 3)
+            self.wkday = self.wkday.lower()
             return True
         except AttributeError:
             return False
@@ -78,17 +80,19 @@ class TimeTableBot:
     def parse_changes(self, page):
         """Returns a list of changes for both classes
         (if they're present)"""
-        changes_list = []
-        changes = re.findall(r'<h2>(1[10]Е)<\/h2>\n<p>((\n|.)+?)(?=(<\/body>|<h2>))', page)
+        changes_e = []
+        changes = re.findall(r'<h2>([0-9]{1,2}[А-С])<\/h2>\n<p>((\n|.)+?)(?=(<\/body>|<h2>))', page)
         for i in changes:
             cls, chg = i[:2]
             chg = chg.replace('<p>', '')
             chg = chg.replace('</p>', '')
             chg = chg.replace('&nbsp;&mdash;', ' –')
-            changes_list.append((cls, chg))
+            if cls in ('10Е', '11Е'):
+                changes_e.append((cls, chg))
+            OneSignal.send(cls, chg.replace('\n', ', '), self.wkday)
             self.log.info('found updates for ' + i[0])
 
-        return changes_list
+        return changes_e
 
     def set_timestamp(self, change_date):
         """Sets the new timestamp"""
@@ -112,9 +116,9 @@ class TimeTableBot:
 
     def run(self):
         self.log.info('starting up')
-        
+
         self.connect()
-        
+
         if self.already_sent():
             self.log.info('already up-to-date, quitting')
             self.log.debug('latest update sent for ' +
@@ -140,17 +144,16 @@ class TimeTableBot:
             self.log.info('table outdated, quitting')
             return
 
-        self.changes = self.parse_changes(self.page)
+        self.changes_e = self.parse_changes(self.page)
 
         self.log.info('generating JSON message')
         atch = TableJSONifier.make_attachment(self.wkday,
-                                              self.changes)
+                                              self.changes_e)
 
         self.send_slack(atch)
         self.set_timestamp(self.change_date)
-        
+
         self.db.close()
         self.log.info('success, quitting')
 
 TimeTableBot().run()
-
