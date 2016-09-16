@@ -1,9 +1,10 @@
 from urllib.request import urlopen
 from urllib.error import URLError
+from urllib.parse import urlparse
 from datetime import datetime
 from slacker import Slacker
 from jsonifier import TableJSONifier
-import logging, os, re
+import logging, psycopg2, os, re
 
 class TimeTableBot:
     months = {'ЯНВАРЯ':    1,
@@ -36,10 +37,23 @@ class TimeTableBot:
 
     log.addHandler(log_handler)
 
+    def connect(self):
+        """Connects to the database"""
+        self.url = urlparse(os.environ["DATABASE_URL"])
+        self.log.info('connecting to the database')
+        self.db = psycopg2.connect(database=self.url.path[1:],
+                                   user=self.url.username,
+                                   password=self.url.password,
+                                   host=self.url.hostname,
+                                   port=self.url.port)
+
+        self.c = self.db.cursor()
+        self.log.info('connection established')
 
     def already_sent(self):
         """Checks if the changes were sent already"""
-        tm = int(os.environ['CHANGES_TM'])
+        self.c.execute('''SELECT tm FROM date''')
+        tm = self.c.fetchone()
         self.changes_sent = datetime.fromtimestamp(tm)
         if self.changes_sent > self.curr_date:
             return True
@@ -78,14 +92,14 @@ class TimeTableBot:
 
     def set_timestamp(self, change_date):
         """Sets the new timestamp"""
-        tm = str(int(change_date.timestamp()))
-        self.log.info('setting a new timestamp in CHANGES_TM')
-        os.environ['CHANGES_TM'] = tm
+        tm = int(change_date.timestamp())
+        self.log.info('setting a new timestamp in the database')
+        self.c.execute('''UPDATE date SET tm = %s''', (tm,))
 
-    def send(self, attachments):
+    def send_slack(self, attachments):
         """Sends a message to Slack"""
         # Create a Slack bot instance
-        slack = Slacker(str(os.environ['SLACK_API_TOKEN']))
+        slack = Slacker(os.environ['SLACK_API_TOKEN'])
 
         # Send a message to #general channel
         self.log.info('sending a message to Slack')
@@ -97,6 +111,8 @@ class TimeTableBot:
 
     def run(self):
         self.log.info('starting up')
+
+        self.connect()
 
         if self.already_sent():
             self.log.info('already up-to-date, quitting')
@@ -128,7 +144,7 @@ class TimeTableBot:
         atch = TableJSONifier.make_attachment(self.wkday,
                                               self.changes)
 
-        self.send(atch)
+        self.send_slack(atch)
         self.set_timestamp(self.change_date)
         self.log.info('success, quitting')
 
