@@ -32,22 +32,9 @@
     </script>
 
     <script>
-      function isSubscribed() {
-        OneSignal.push(function() {
-          OneSignal.isPushNotificationsEnabled(function (isEnabled) {
-            if (isEnabled){
-              return true;
-            }
-            else{
-              return false;
-            }
-          })
-        });
-      }
-    </script>
-
-    <script>
       function subscribe() {
+        OneSignal.deleteTags(["class", "letter"]);
+
         OneSignal.push(function() {
           OneSignal.sendTags({
             class: document.getElementById("class").value,
@@ -60,64 +47,12 @@
         });
       }
     </script>
-
-    <script>
-      function unsubscribe() {
-        OneSignal.push(function() {
-          OneSignal.deleteTags(["class", "letter"]);
-        });
-
-        OneSignal.push(["setSubscription", false]);
-      }
-    </script>
-
-    <script>
-      function run() {
-        if (isSubscribed()) {
-          unsubscribe();
-
-          document.getElementById("setup_head").innerHTML = "Подключение";
-          document.getElementById("setup_hint").innerHTML = "";
-          document.getElementById("enable").attribute = "Подписаться";
-        }
-        else {
-          subscribe();
-
-          document.getElementById("setup_head").innerHTML = "Настройка";
-          document.getElementById("setup_hint").innerHTML = "Нажав кнопку ниже, ты можешь отписаться от уведомлений. Чтобы изменить класс, нужно отписать и заново оформить подписку.";
-          document.getElementById("enable").attribute = "Отписаться";
-        }
-      }
-    </script>
 </head>
 
 <body>
     <div class="container" id="name">
       <div class="column" style="margin: 40px;">
         <h1 align="center">Timetable</h2>
-      </div>
-    </div>
-
-    <div class="container" id="story">
-      <div class="column">
-        <p>Мы написали этот небольшой скрипт, чтобы, возможно, облегчить кому-то жизнь.
-           С его помощью можно забыть о проверке расписания на сайте,
-           так как он это будет <b>делать за тебя</b> и <b>присылать уведомления</b> об
-           изменениях прямо на компьютер или телефон.
-        </p>
-
-        <p>Чтобы начать, достаточно выбрать свой класс в форме ниже и нажать кнопку.
-           Наш сайт запросит разрешение на отправку уведомлений в браузер, необходимо
-           разрешить ему это делать. После этого можно считать настройку оконченной
-           и спокойно закрыть страницу.
-        </p>
-
-        <p>Как только робот заметит изменения в расписании, он отправит сообщение об этом.
-           <i>Для получения уведомлений не нужно заходить на сайт, достаточно быть
-           подключенным к интернету</i>.
-        </p>
-
-        <p>Всё просто, не так ли? :)</p>
       </div>
     </div>
 
@@ -154,19 +89,12 @@
 
             <input class="button-primary"
             type="submit" value="включить"
-            id="enable" onclick="run(); return false;"/>
+            id="enable" onclick="subscribe(); return false;"/>
 
           </fieldset>
         </form>
-
-        <script>
-          if (isSubscribed()) {
-            document.getElementById("setup_head").innerHTML = "Настройка";
-            document.getElementById("setup_hint").innerHTML = "Нажав кнопку ниже, ты можешь отписаться от уведомлений. Чтобы изменить класс, нужно отписать и заново оформить подписку."
-            document.getElementById("enable").attribute = "Отписаться";
-          };
-        </script>
-
+      </div>
+    </div>
 </body>
 
 </html>
