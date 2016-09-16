@@ -22,7 +22,7 @@ You can suggest new features and add your own using the pull requests' section. 
 - [x] Write a bot.
 - [x] Add logging.
 - [x] Rewrite message format to json and send text as attachment for better view.
-- [ ] _Epic_ :sparkles:: Add a web interface.
-- [ ] _The **most** epic_ :saxophone::turtle:: Add push notifications.
+- [x] _Epic_ :sparkles:: Add a web interface.
+- [x] _The **most** epic_ :saxophone::turtle:: Add push notifications.
 
 Stay tuned :rocket:.
