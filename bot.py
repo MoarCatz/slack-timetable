@@ -81,7 +81,7 @@ class TimeTableBot:
         """Returns a list of changes for both classes
         (if they're present)"""
         changes_e = []
-        changes = re.findall(r'<h2>([0-9]{1,2}[А-С])<\/h2>\n<p>((\n|.)+?)(?=(<\/body>|<h2>))', page)
+        changes = re.findall(r'<h2>([0-9]{1,2}[А-С])<\/h2>\s*<p>((\n|.)+?)(?=(<\/body>|<h2>))', page)
         for i in changes:
             cls, chg = i[:2]
             chg = chg.replace('<p>', '')
@@ -89,8 +89,9 @@ class TimeTableBot:
             chg = chg.replace('&nbsp;&mdash;', ' –')
             if cls in ('10Е', '11Е'):
                 changes_e.append((cls, chg))
+            self.log.info('found updates for ' + cls)
+            self.log.info('sending push for ' + cls)
             OneSignal.send(cls, chg.replace('\n', ', '), self.wkday)
-            self.log.info('found updates for ' + i[0])
 
         return changes_e
 
@@ -146,11 +147,12 @@ class TimeTableBot:
 
         self.changes_e = self.parse_changes(self.page)
 
-        self.log.info('generating JSON message')
-        atch = TableJSONifier.make_attachment(self.wkday,
-                                              self.changes_e)
+        if self.changes_e:
+            self.log.info('generating JSON message')
+            atch = TableJSONifier.make_attachment(self.wkday,
+                                                  self.changes_e)
+            self.send_slack(atch)
 
-        self.send_slack(atch)
         self.set_timestamp(self.change_date)
 
         self.db.close()
