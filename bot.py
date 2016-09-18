@@ -84,14 +84,14 @@ class TimeTableBot:
         changes = re.findall(r'<h2>([0-9]{1,2}[А-С])<\/h2>\s*<p>((\n|.)+?)(?=(<\/body>|<h2>))', page)
         for i in changes:
             cls, chg = i[:2]
-            chg = chg.replace('<p>', '')
+            chg = chg.strip().replace('<p>', '')
             chg = chg.replace('</p>', '')
             chg = chg.replace('&nbsp;&mdash;', ' –')
             if cls in ('10Е', '11Е'):
                 changes_e.append((cls, chg))
             self.log.info('found updates for ' + cls)
             self.log.info('sending push for ' + cls)
-            OneSignal.send(cls, chg.replace('\n', ', '), self.wkday)
+            OneSignal.send(cls, chg.replace('\r\n', ', '), self.wkday)
 
         return changes_e
 
