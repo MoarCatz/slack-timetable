@@ -1,0 +1,35 @@
+{
+  "name": "slack-timetable",
+  "description": "",
+  "scripts": {
+    "postdeploy": "python3 bot.py"
+  },
+  "env": {
+    "ONESIGNAL_APP_ID": {
+      "required": true
+    },
+    "ONESIGNAL_AUTHORIZATION": {
+      "required": true
+    },
+    "SLACK_API_TOKEN": {
+      "required": true
+    },
+    "TIMETABLE_ENC": {
+      "required": true
+    },
+    "TIMETABLE_URL": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+    "heroku-postgresql",
+    "scheduler"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
