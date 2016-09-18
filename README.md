@@ -1,13 +1,12 @@
 # Slack Timetable Bot
 
-This is a simple Python script that checks for new changes in the
-timetable for 10E and 11E classes at [this](http://lyceum.urfu.ru/study/izmenHtml.php) page.
+This is a Python bot that checks for new changes in the
+timetable at [this](http://lyceum.urfu.ru/study/izmenHtml.php) page and sends the changes for 10E and 11E to Slack.
 
 ## How It Works?
 
-The bot is hosted at Heroku and is being triggered every hour using `cron` planner.
-When new changes are present, it sends them to Slack channel and puts a date of those changes to a text file
-called `changes.txt`.
+The bot is hosted at Heroku and is being triggered every hour.
+When new changes are present, it sends them to a Slack channel and records the change date to avoid sending the same notification over and over again.
 
 ## Requirements
 
@@ -25,4 +24,4 @@ You can suggest new features and add your own using the pull requests' section. 
 - [x] _Epic_ :sparkles:: Add a web interface.
 - [x] _The **most** epic_ :saxophone::turtle:: Add push notifications.
 
-Stay tuned :rocket:.
+Stay tuned. :rocket:
