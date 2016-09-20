@@ -17,3 +17,5 @@ class OneSignal:
         self.req = requests.post("https://onesignal.com/api/v1/notifications",
                    headers = self.header,
                    data = json.dumps(self.payload))
+
+        print(self.req.status_code, self.req.reason)
