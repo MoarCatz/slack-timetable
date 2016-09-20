@@ -81,7 +81,7 @@ class TimeTableBot:
         """Returns a list of changes for both classes
         (if they're present)"""
         changes_e = []
-        changes = re.findall(r'<h2>([0-9]{1,2}[А-С])<\/h2>\s*<p>((\n|.)+?)(?=(<\/body>|<h2>))', page)
+        changes = re.findall(r'<h2>([0-9]{1,2}[А-С])<\/h2>\s*<p>((\n|.)+?)(?=(<\/body>|<h2>|<h1>))', page)
         for i in changes:
             cls, chg = i[:2]
             chg = chg.strip().replace('<p>', '')
