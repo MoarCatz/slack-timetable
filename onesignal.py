@@ -1,5 +1,10 @@
 import json, os, requests
 
+class SendingFailure(Exception):
+    def __init__(self, cls):
+        self.cls = cls
+
+
 class OneSignal:
     @classmethod
     def send(self, cls, change, wkday):
@@ -18,4 +23,5 @@ class OneSignal:
                    headers = self.header,
                    data = json.dumps(self.payload))
 
-        print(self.req.status_code, self.req.reason)
+        if self.req.status_code != requests.codes.ok:
+            raise SendingFailure(cls)

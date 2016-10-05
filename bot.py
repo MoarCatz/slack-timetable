@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 from datetime import datetime
 from slacker import Slacker
 from jsonifier import TableJSONifier
-from onesignal import OneSignal
+from onesignal import OneSignal, SendingFailure
 import logging, psycopg2, os, re
 
 class TimeTableBot:
@@ -92,7 +92,10 @@ class TimeTableBot:
                 changes_e.append((cls, chg))
             self.log.info('found updates for ' + cls)
             self.log.info('sending push for ' + cls)
-            OneSignal.send(cls, chg.replace('\r\n', ', '), self.wkday)
+            try:
+                OneSignal.send(cls, chg.replace('\r\n', ', '), self.wkday)
+            except SendingFailure as e:
+                self.log.error('failed to send updates for', e.cls)
 
         return changes_e
 
