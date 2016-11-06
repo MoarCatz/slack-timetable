@@ -72,7 +72,7 @@ class TimetableBot:
         (if they're present)"""
         c = self.db.cursor()
         c.execute('''SELECT classes FROM changes''')
-        done = set(c.fetchone())
+        done = set(*c.fetchone())
 
         changes_e = []
         changes = re.findall(r'<h2>([0-9]{1,2}[А-Са-с])<\/h2>\s*<p>((\n|.)+?)(?=(<\/body>|<h2>|<h1>))', page)
